@@ -1,5 +1,6 @@
 #!/bin/sh
 fwdto=+61456789123
+emlto=your@email.address
 
 func_process_msg () {
 	ubus call mobiled.sms get | jsonfilter -e '@.messages[*]' | while read msg
@@ -19,6 +20,7 @@ func_process_msg () {
 			if grep -w -q "connected" sim.txt; then
 				message=`echo -e "id: $id, number: $number, text: $text, date: $date" `
 				echo -e $message
+				echo -e "Subject: Incoming SMS\n\n$message" | sendmail $emlto
 				ubus call mobiled.sms send '{ "number": "'"$fwdto"'", "message": "'"$message"'" }' && timeout 5 cat /dev/ttyUSB2 > status.txt
 			fi
 			if grep -w -q "OK" status.txt; then
