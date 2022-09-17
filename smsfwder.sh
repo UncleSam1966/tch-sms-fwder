@@ -1,6 +1,6 @@
 #!/bin/sh
 fwdto=+61456789123
-emlto=your@email.address
+emlto=your@email.address.com
 
 func_process_msg () {
 	ubus call mobiled.sms get | jsonfilter -e '@.messages[*]' | while read msg
